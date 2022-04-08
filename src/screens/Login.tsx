@@ -1,5 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { Pressable, SafeAreaView, Text, TextInput } from 'react-native';
+import {
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 
 import { getAddress } from 'api/address';
@@ -31,10 +38,11 @@ export const Login: React.FC = () => {
       const { balance, transactions } = res.data;
       const numericBalance = parseFloat(balance);
 
-      // if there are no transactions and no balance then the address is invalid
-      if (numericBalance === 0 && transactions.length === 0) {
+      // If there are no transactions then the address is invalid
+      if (transactions.length === 0) {
         setError('Address not found, please enter a valid address');
         setSubmitting(false);
+        return;
       }
 
       // Valid address found
@@ -49,24 +57,84 @@ export const Login: React.FC = () => {
       );
       setSubmitting(false);
     } catch (e) {
+      console.log(e);
       setSubmitting(false);
       setError('An error occurred, please try again');
     }
   }, [address, navigation, setBalance, setContextAddress, setTransactions]);
 
   return (
-    <SafeAreaView>
-      <Text>My Jobcoin Wallet</Text>
-      <Text>Enter your address to enter</Text>
-      <TextInput
-        value={address}
-        onChangeText={(val) => setAddress(val)}
-        placeholder="Address"
-      />
-      {!!error && <Text>{error}</Text>}
-      <Pressable onPress={handleSubmit} disabled={submitting}>
-        {submitting ? <Text>Submitting...</Text> : <Text>Enter</Text>}
-      </Pressable>
+    <SafeAreaView style={styles.outerConatiner}>
+      <View style={styles.container}>
+        <Text style={styles.title}>My Jobcoin Wallet</Text>
+        <Text style={styles.subtitle}>Enter your address to enter</Text>
+        <TextInput
+          value={address}
+          onChangeText={(val) => setAddress(val)}
+          placeholder="Address"
+          style={styles.input}
+        />
+        <Pressable
+          onPress={handleSubmit}
+          disabled={submitting}
+          style={styles.button}
+        >
+          {submitting ? (
+            <Text style={styles.buttonText}>Submitting...</Text>
+          ) : (
+            <Text style={styles.buttonText}>Enter</Text>
+          )}
+        </Pressable>
+        {!!error && <Text style={styles.errorText}>{error}</Text>}
+      </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  outerConatiner: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 30,
+    marginBottom: 15,
+  },
+  subtitle: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  input: {
+    borderColor: '#c5c4c4',
+    borderRadius: 5,
+    borderWidth: 1,
+    marginVertical: 10,
+    padding: 10,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginVertical: 10,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#00a8ff',
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 60,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});

@@ -15,8 +15,5 @@ import { Address } from 'types/Address';
 export const getAddress = async (address: string) =>
   axios.request<Address>({
     method: 'GET',
-    url: 'http://jobcoin.gemini.com/greasily-pessimist/api/addresses/',
-    params: {
-      address,
-    },
+    url: `http://jobcoin.gemini.com/greasily-pessimist/api/addresses/${address}`,
   });
