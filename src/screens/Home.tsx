@@ -56,6 +56,7 @@ export const Home: React.FC = () => {
             );
             setAddress(undefined);
           }}
+          testID="sign-out-button"
         >
           <Text>Sign Out</Text>
         </Pressable>
@@ -80,6 +81,10 @@ export const Home: React.FC = () => {
       setAddressToSendError('Address is required');
       setSubmitting(false);
       return;
+    } else if (addressToSend === address) {
+      setAddressToSendError('You cannot send to yourself');
+      setSubmitting(false);
+      return;
     }
 
     // Check amount
@@ -87,7 +92,7 @@ export const Home: React.FC = () => {
       setAmountError('Amount is required');
       setSubmitting(false);
       return;
-    } else if (parseFloat(amountToSend) === 0) {
+    } else if (parseFloat(amountToSend) <= 0) {
       setAmountError('Amount must be greater than 0');
       setSubmitting(false);
       return;
@@ -205,15 +210,19 @@ export const Home: React.FC = () => {
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.scrollContent}
+      testID="home-screen"
     >
       <View style={styles.header}>
         <View>
           <Text style={styles.balanceLabel}>Balance:</Text>
-          <Text style={styles.balance}>{balance}</Text>
+          <Text style={styles.balance} testID="balance-text">
+            {balance}
+          </Text>
         </View>
         <Pressable
           onPress={() => setSendModalVisible(true)}
           style={styles.sendButton}
+          testID="send-button"
         >
           <Text style={styles.sendButtonText}>Send</Text>
         </Pressable>
@@ -285,7 +294,7 @@ export const Home: React.FC = () => {
       </View>
       {sendModalVisible && (
         <Portal>
-          <View style={styles.modalBackground}>
+          <View style={styles.modalBackground} testID="send-modal">
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Send Jobcoin</Text>
               <View style={styles.inputRow}>
@@ -295,8 +304,13 @@ export const Home: React.FC = () => {
                   placeholder="Address"
                   value={addressToSend}
                   onChangeText={(value) => setAddressToSend(value.trim())}
+                  testID="send-address-input"
                 />
-                <Text style={styles.inputError}>{addressToSendError}</Text>
+                {!!addressToSendError && (
+                  <Text style={styles.inputError} testID="send-address-error">
+                    {addressToSendError}
+                  </Text>
+                )}
               </View>
               <View style={styles.inputRow}>
                 <Text style={styles.inputLabel}>Amount</Text>
@@ -317,8 +331,13 @@ export const Home: React.FC = () => {
                       setAmountToSend(cleanedValue);
                     }
                   }}
+                  testID="send-amount-input"
                 />
-                <Text style={styles.inputError}>{amountError}</Text>
+                {!!amountError && (
+                  <Text style={styles.inputError} testID="send-amount-error">
+                    {amountError}
+                  </Text>
+                )}
               </View>
               {!!error && <Text style={styles.modalError}>{error}</Text>}
               <View style={styles.modalButtonsWrapper}>
@@ -332,6 +351,7 @@ export const Home: React.FC = () => {
                   onPress={handleSend}
                   style={[styles.modalButton, styles.modalConfirmButton]}
                   disabled={submitting}
+                  testID="send-confirm-button"
                 >
                   <Text style={styles.modalButtonText}>
                     {submitting ? 'submitting...' : 'Send'}

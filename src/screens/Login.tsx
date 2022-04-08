@@ -66,7 +66,7 @@ export const Login: React.FC = () => {
   }, [address, navigation, setBalance, setContextAddress, setTransactions]);
 
   return (
-    <SafeAreaView style={styles.outerConatiner}>
+    <SafeAreaView style={styles.outerConatiner} testID="login-screen">
       <View style={styles.container}>
         <Text style={styles.title}>My Jobcoin Wallet</Text>
         <Text style={styles.subtitle}>Enter your address to enter</Text>
@@ -81,11 +81,13 @@ export const Login: React.FC = () => {
           keyboardType="default"
           returnKeyType="done"
           onSubmitEditing={handleSubmit}
+          testID="address-input"
         />
         <Pressable
           onPress={handleSubmit}
           disabled={submitting}
           style={styles.button}
+          testID="login-button"
         >
           {submitting ? (
             <Text style={styles.buttonText}>Submitting...</Text>
@@ -93,7 +95,11 @@ export const Login: React.FC = () => {
             <Text style={styles.buttonText}>Enter</Text>
           )}
         </Pressable>
-        {!!error && <Text style={styles.errorText}>{error}</Text>}
+        {!!error && (
+          <Text style={styles.errorText} testID="error-text">
+            {error}
+          </Text>
+        )}
       </View>
     </SafeAreaView>
   );
