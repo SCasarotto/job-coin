@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import {
+  Keyboard,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -56,6 +57,7 @@ export const Login: React.FC = () => {
         }),
       );
       setSubmitting(false);
+      Keyboard.dismiss();
     } catch (e) {
       console.log(e);
       setSubmitting(false);
@@ -73,6 +75,12 @@ export const Login: React.FC = () => {
           onChangeText={(val) => setAddress(val)}
           placeholder="Address"
           style={styles.input}
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={true}
+          keyboardType="default"
+          returnKeyType="done"
+          onSubmitEditing={handleSubmit}
         />
         <Pressable
           onPress={handleSubmit}

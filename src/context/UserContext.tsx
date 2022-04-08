@@ -5,7 +5,7 @@ import { Transaction } from 'types/Transaction';
  * Simple context to store user information app wide
  */
 export const UserContext = createContext<{
-  addresss?: string;
+  address?: string;
   setAddress: React.Dispatch<React.SetStateAction<string | undefined>>;
   balance?: number;
   setBalance: React.Dispatch<React.SetStateAction<number | undefined>>;
